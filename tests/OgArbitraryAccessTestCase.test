@@ -28,7 +28,7 @@ class OgArbitraryAccessTestCase extends DrupalWebTestCase {
     // Create "email domain" OG arbitrary access entity.
     $values = array(
       'type' => 'email_domain',
-      'data' => array('example.com', 'foo.bar'),
+      'data' => array('foo.bar'),
     );
     $entity = entity_create('og_arbitrary_access', $values);
     $entity->save();
@@ -78,7 +78,7 @@ class OgArbitraryAccessTestCase extends DrupalWebTestCase {
     $this->drupalGet('node/' . $this->group1->nid);
     $this->assertResponse(403);
 
-    $user1->mail = 'new@example.com';
+    $user1->mail = 'new@foo.bar';
     user_save($user1);
 
     $this->drupalGet('node/' . $this->group1->nid);

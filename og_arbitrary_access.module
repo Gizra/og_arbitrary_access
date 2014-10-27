@@ -182,7 +182,7 @@ function og_arbitrary_access_get_og_arbitrary_access_handler($plugin_name, $enti
 function og_arbitrary_access_node_grants($account, $op) {
   $grants = array();
   foreach (og_arbitrary_access_get_og_arbitrary_access_plugins() as $plugin_name => $plugin) {
-    $result = call_user_func(array($plugin['class'], 'getNodeGrants'));
+    $result = call_user_func(array($plugin['class'], 'getNodeGrants'), $plugin_name);
     $grants = array_merge_recursive($grants, $result);
   }
 

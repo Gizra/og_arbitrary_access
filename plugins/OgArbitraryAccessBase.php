@@ -98,7 +98,12 @@ abstract class OgArbitraryAccessBase implements OgArbitraryAccessInterface {
   /**
    * {@inheritdoc}
    */
-  public static function getNodeGrants($account, $op) {
+  public static function getNodeGrants($plugin_name, $account = NULL, $op = 'view') {
+    if (empty($account)) {
+      global $user;
+      $account = user_load($user->uid);
+    }
+
     if ($op != 'view') {
       // Not a view operation.
       return;
@@ -116,7 +121,7 @@ abstract class OgArbitraryAccessBase implements OgArbitraryAccessInterface {
 
 
     // The "realm" name is the plugin name.
-    return array($this->plugin['name'] => $groups['node']);
+    return array($plugin_name => $groups['node']);
   }
 
   /**

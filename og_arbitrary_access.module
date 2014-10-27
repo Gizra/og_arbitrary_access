@@ -198,5 +198,7 @@ function og_arbitrary_access_node_access_records($node) {
     $grants = array_merge_recursive($grants, $result);
   }
 
+  dpm($grants);
+
   return $grants;
 }

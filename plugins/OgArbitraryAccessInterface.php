@@ -19,7 +19,7 @@ interface OgArbitraryAccessInterface {
    *
    * @see hook_node_access_records()
    */
-  public function getNodeAccessRecords();
+  public function getNodeAccessRecords($node);
 
   /**
    * Determine if the passed entity has access to the handler.

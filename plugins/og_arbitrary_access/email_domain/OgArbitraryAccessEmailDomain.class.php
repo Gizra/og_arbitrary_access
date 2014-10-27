@@ -37,7 +37,9 @@ class OgArbitraryAccessEmailDomain extends OgArbitraryAccessBase {
   /**
    * {@inheritdoc}
    */
-  public function getNodeAccessRecords($node) {
+  public function getNodeAccessRecords() {
+    $node = $this->getNode();
+
     if (empty($node->status)) {
       // Node is unpublished, so we don't allow every group member to see
       // it.

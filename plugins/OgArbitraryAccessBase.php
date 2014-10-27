@@ -20,33 +20,32 @@ abstract class OgArbitraryAccessBase implements OgArbitraryAccessInterface {
    *
    * @var stdClass
    */
-  protected $entity;
+  protected $node;
 
   /**
    * @param \stdClass $entity
    */
-  public function setEntity($entity) {
-    $this->entity = $entity;
+  public function setNode($entity) {
+    $this->node = $entity;
   }
 
   /**
    * @return \stdClass
    */
-  public function getEntity() {
-    return $this->entity;
+  public function getNode() {
+    return $this->node;
   }
 
   /**
+   *
    * @param array $plugin
    *   The plugin definition.
-   * @param $entity_type
-   *   The entity type.
-   * @param $entity
-   *   The entity object.
+   * @param $node
+   *   The node object.
    */
-  public function __construct(array $plugin, $entity_type, $entity) {
+  public function __construct(array $plugin, $node) {
     $this->plugin = $plugin;
-    $this->setEntity($entity);
+    $this->setNode($node);
   }
 
   /**
@@ -67,7 +66,7 @@ abstract class OgArbitraryAccessBase implements OgArbitraryAccessInterface {
   protected function getReferenceFields() {
     // Get the entity reference fields.
     $return = array();
-    $bundle = $this->getEntity()->type;
+    $bundle = $this->getNode()->type;
     foreach (field_info_instances('node', $bundle) as $field_name => $instance) {
       $field = field_info_field($field_name);
       if ($field['type'] != 'entityreference') {

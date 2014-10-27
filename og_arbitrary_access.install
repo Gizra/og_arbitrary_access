@@ -31,6 +31,12 @@ function og_arbitrary_access_schema() {
         'not null' => TRUE,
         'unsigned' => TRUE,
       ),
+      'data' => array(
+        'description' => 'Serialized array with general data.',
+        'type' => 'text',
+        'serialize' => TRUE,
+        'size' => 'big',
+      ),
       'language' => array(
         'description' => 'The {languages}.language of this OG arbitrary access..',
         'type' => 'varchar',

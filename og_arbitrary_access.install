@@ -1,43 +1,63 @@
 <?php
 
-
 /**
  * @file
- * Install, update, and uninstall functions for the Organic groups access module.
+ * Install, update, and uninstall functions for the Organic groups arbitrary
+ * access module.
  */
 
 /**
- * Implements hook_uninstall().
+ * Implements hook_schema()
  */
-function og_access_uninstall() {
-  $vars = array(
-    'og_access_strict_private',
+function og_arbitrary_access_schema() {
+  $schema['og_arbitrary_access'] = array(
+    'description' => 'An instance of a OG arbitrary access.',
+    'fields' => array(
+      'id' => array(
+        'type' => 'serial',
+        'unsigned' => TRUE,
+        'description' => 'The Unique ID of the OG arbitrary access.',
+      ),
+      'type' => array(
+        'description' => 'Reference to an OG arbitrary access plugin.',
+        'type' => 'varchar',
+        'length' => 255,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+      'timestamp' => array(
+        'description' => 'When the OG arbitrary access instance was recorded.',
+        'type' => 'int',
+        'not null' => TRUE,
+        'unsigned' => TRUE,
+      ),
+      'language' => array(
+        'description' => 'The {languages}.language of this OG arbitrary access..',
+        'type' => 'varchar',
+        'length' => 12,
+        'not null' => TRUE,
+        'default' => '',
+      ),
+    ),
+    'primary key' => array('id'),
+    'indexes' => array(
+      'type_index' => array('type'),
+      'timestamp' => array('timestamp'),
+    ),
   );
-  foreach ($vars as $var) {
-    variable_del($var);
+
+  // Cache bins for Entity-cache module.
+  $cache_schema = drupal_get_schema_unprocessed('system', 'cache');
+  $types = array(
+    'message_type_category',
+    'message_type',
+    'message',
+  );
+
+  foreach ($types as $type) {
+    $schema["cache_entity_$type"] = $cache_schema;
+    $schema["cache_entity_$type"]['description'] = "Cache table used to store $type entity records.";
   }
-}
 
-/**
- * Implements hook_schema();
- */
-function og_access_schema() {
-  if (db_table_exists('og_access_post')) {
-    db_rename_table('og_access_post', 'd6_og_access_post');
-  }
-}
-
-/**
- * Upgrade from Organic groups access 6 to 7.
- */
-function og_access_update_7000(&$sandbox) {
-  // Nothing to do, just clear cache.
-}
-
-/**
- * Set variable to show message about "Rebuilding permissions".
- */
-function og_access_update_7200(&$sandbox) {
-  node_access_needs_rebuild(TRUE);
-  variable_del('group_access_strict_private');
+  return $schema;
 }

@@ -10,3 +10,6 @@ files[] = includes/OgArbitraryAccess.php
 ; Handlers
 files[] = plugins/OgArbitraryAccessBase.php
 files[] = plugins/OgArbitraryAccessInterface.php
+
+; Tests
+files[] = tests/OgArbitraryAccessTestCase.test

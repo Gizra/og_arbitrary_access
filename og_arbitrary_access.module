@@ -65,6 +65,7 @@ function og_arbitrary_access_og_fields_info() {
       'type' => 'entityreference',
       'cardinality' => FIELD_CARDINALITY_UNLIMITED,
       'settings' => array(
+        'target_type' => 'og_arbitrary_access',
       ),
     ),
     'instance' => array(

@@ -5,6 +5,87 @@
  * Control the group and group content view access of groups by custom logic.
  */
 
+/**
+ * Implements hook_entity_info().
+ */
+function message_entity_info() {
+  $items['og_arbitrary_access_type'] = array(
+    'label' => t('OG arbitrary access type'),
+    'controller class' => 'EntityAPIControllerExportable',
+    'entity class' => 'OgArbitraryAccessType',
+    'base table' => 'og_arbitrary_access_type',
+    'fieldable' => TRUE,
+    'entity keys' => array(
+      'id' => 'id',
+      'label' => 'description',
+      'name' => 'name',
+      'language' => 'language',
+    ),
+    'bundles' => array(),
+    'exportable' => TRUE,
+    'export' => array(
+      'default hook' => 'default_og_arbitrary_access_type',
+    ),
+    'bundle of' => 'og_arbitrary_access',
+    'module' => 'og_arbitrary_access',
+    'access callback' => 'og_arbitrary_access_type_access',
+    'entity cache' => module_exists('entitycache'),
+  );
+
+  $items['og_arbitrary_access'] = array(
+    'label' => t('OG arbitrary access'),
+    'controller class' => 'EntityAPIController',
+    'entity class' => 'OgArbitraryAccess',
+    'base table' => 'og_arbitrary_access',
+    'fieldable' => TRUE,
+    'access callback' => 'og_arbitrary_access_access',
+    'entity keys' => array(
+      'id' => 'id',
+      'label' => FALSE,
+      'bundle' => 'type',
+      'language' => 'language',
+    ),
+    'bundles' => array(),
+    'bundle keys' => array(
+      'bundle' => 'name',
+    ),
+    'view modes' => array(
+      'full' => array(
+        'label' => t('Full'),
+        'custom settings' => FALSE,
+      ),
+    ),
+    'module' => 'og_arbitrary_access',
+    'metadata controller class' => 'EntityDefaultMetadataController',
+    'views controller class' => 'EntityDefaultViewsController',
+    'entity cache' => module_exists('entitycache'),
+  );
+
+
+  // Add bundle info but bypass entity_load() as we cannot use it here.
+  if (db_table_exists('og_arbitrary_access_type')) {
+    $types = db_select('og_arbitrary_access_type', 'ogat')
+      ->fields('ogat')
+      ->execute()
+      ->fetchAllAssoc('name');
+  }
+
+
+  // Add bundles by plugins.
+  foreach ($types as $type_name => $type) {
+    $items['og_arbitrary_access']['bundles'][$type_name->name] = array(
+      'label' => $type_name->label,
+      'admin' => array(
+        'path' => 'admin/structure/og_arbitrary_access/manage/%',
+        'real path' => 'admin/structure/og_arbitrary_access/manage/' . $type_name->name,
+        'bundle argument' => 4,
+        'access arguments' => array('administer og arbitrary access types'),
+      ),
+    );
+  }
+
+  return $items;
+}
 
 /**
  * Implements hook_ctools_plugin_directory().

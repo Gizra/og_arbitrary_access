@@ -4,6 +4,10 @@ package = "Organic groups"
 dependencies[] = og
 core = 7.x
 
+; Entity classes.
+files[] = includes/OgArbitraryAccess.php
+files[] = includes/OgArbitraryAccessType.php
+
 ; Handlers
 files[] = plugins/OgArbitraryAccessBase.php
 files[] = plugins/OgArbitraryAccessInterface.php

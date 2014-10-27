@@ -1,0 +1,87 @@
+<?php
+
+/**
+ * @file
+ * Contains OgArbitraryAccessTestCase.test.
+ */
+
+class OgArbitraryAccessTestCase extends DrupalWebTestCase {
+
+  /**
+   * Provides information about the test class.
+   */
+  public static function getInfo() {
+    return array(
+      'name' => 'Access',
+      'description' => 'Test the access.',
+      'group' => 'OG arbitrary access',
+    );
+  }
+
+  /**
+   * Operations before the testing begins.
+   */
+  function setUp() {
+    parent::setUp('og', 'og_arbitrary_access');
+    node_access_rebuild();
+
+    // Create "email domain" OG arbitrary access entity.
+    $values = array(
+      'type' => 'email_domain',
+      'data' => array('foo.bar'),
+    );
+    $entity = entity_create('og_arbitrary_access', $values);
+    $entity->save();
+
+    $group_type = $this->drupalCreateContentType();
+    $group_type = $group_type->type;
+
+    // Add OG group field to a node's bundle.
+    og_create_field(OG_GROUP_FIELD, 'node', $group_type);
+    og_create_field('og_arbitrary_access', 'node', $group_type);
+
+    $group_content_type = $this->drupalCreateContentType();
+    $group_content_type = $group_content_type->type;
+
+    // Add OG audience field to a node's bundle.
+    og_create_field(OG_AUDIENCE_FIELD, 'node', $group_content_type);
+    og_create_field('og_arbitrary_access', 'node', $group_content_type);
+
+    // Create group node.
+    $settings = array('type' => $group_type);
+    $this->group1 = $this->drupalCreateNode($settings);
+
+    // Reference the OG arbitrary access entity.
+    $wrapper = entity_metadata_wrapper('node', $this->group1);
+    $wrapper->og_arbitrary_access[] = $entity;
+    $wrapper->save();
+
+    // Create node to add to group.
+    $settings = array('type' => $group_content_type);
+    $this->groupContent1 = $this->drupalCreateNode($settings);
+
+    // Add node to group.
+    $values = array(
+      'entity_type' => 'node',
+      'entity' => $this->groupContent1,
+    );
+    og_group('node', $this->group1, $values);
+  }
+
+  /**
+   * Test authenticating a user.
+   */
+  function testAccess() {
+    $user1 = $this->drupalCreateUser();
+
+    $this->drupalLogin($user1);
+    $this->drupalGet('node/' . $this->group1->nid);
+    $this->assertResponse(403);
+
+    $user1->mail = 'new@foo.bar';
+    user_save($user1);
+
+    $this->drupalGet('node/' . $this->group1->nid);
+    $this->assertResponse(200);
+  }
+}

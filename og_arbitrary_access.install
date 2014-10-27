@@ -37,13 +37,6 @@ function og_arbitrary_access_schema() {
         'serialize' => TRUE,
         'size' => 'big',
       ),
-      'language' => array(
-        'description' => 'The {languages}.language of this OG arbitrary access..',
-        'type' => 'varchar',
-        'length' => 12,
-        'not null' => TRUE,
-        'default' => '',
-      ),
     ),
     'primary key' => array('id'),
     'indexes' => array(
@@ -54,16 +47,8 @@ function og_arbitrary_access_schema() {
 
   // Cache bins for Entity-cache module.
   $cache_schema = drupal_get_schema_unprocessed('system', 'cache');
-  $types = array(
-    'message_type_category',
-    'message_type',
-    'message',
-  );
-
-  foreach ($types as $type) {
-    $schema["cache_entity_$type"] = $cache_schema;
-    $schema["cache_entity_$type"]['description'] = "Cache table used to store $type entity records.";
-  }
+  $schema["cache_entity_og_arbitrary_access"] = $cache_schema;
+  $schema["cache_entity_og_arbitrary_access"]['description'] = "Cache table used to store OG arbitrary access entity records.";
 
   return $schema;
 }

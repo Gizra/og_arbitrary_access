@@ -12,7 +12,7 @@ interface OgArbitraryAccessInterface {
    *
    * @see hook_node_grants()
    */
-  public function getNodeGrants();
+  public static function getNodeGrants($account, $op);
 
   /**
    * @return mixed
@@ -22,9 +22,17 @@ interface OgArbitraryAccessInterface {
   public function getNodeAccessRecords();
 
   /**
+   * Determine if the passed entity has access to the handler.
+   *
+   * @todo: Improve the above one-liner.
+   *
    * @param $entity_type
+   *   The entity type.
    * @param $entity
+   *   The entity object.
+   * @param $op
+   *   The operation to perform: 'view', 'edit' or 'delete'.
    * @return mixed
    */
-  public static function access($entity_type, $entity);
+  public static function access($entity_type, $entity, $op);
 }

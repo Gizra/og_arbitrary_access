@@ -55,6 +55,30 @@ function og_arbitrary_access_entity_info() {
 }
 
 /**
+ * Implements hook_og_fields_info().
+ */
+function og_arbitrary_access_og_fields_info() {
+  $items['og_arbitrary_access'] = array(
+    'type' => array('group', 'group_content'),
+    'description' => t('Reference to OG arbitrary access entities.'),
+    'field' => array(
+      'field_name' => 'og_arbitrary_access',
+      'type' => 'entityreference',
+      'cardinality' => FIELD_CARDINALITY_UNLIMITED,
+      'settings' => array(
+      ),
+    ),
+    'instance' => array(
+      'label' => t('OG arbitrary access'),
+      'description' => t('Reference to OG arbitrary access entities.'),
+      'default_value' => array(0 => array('value' => 1)),
+    ),
+  );
+
+  return $items;
+}
+
+/**
  * Implements hook_ctools_plugin_directory().
  */
 function og_arbitrary_access_ctools_plugin_directory($module, $plugin) {
@@ -121,13 +145,18 @@ function og_arbitrary_access_get_og_arbitrary_access_plugin($plugin_name) {
  *
  * @param $plugin_name
  *  Name of plugin.
+ * @param $entity_type
+ *   The entity type.
+ * @param $entity
+ *   The entity object.
+ *
  * @throws Exception
  *  Class not found.
  *
- * @return ElectricityNormalizerInterface | NULL
- *   The handler object if found, or NULL.
+ * @return OgArbitraryAccessInterface
+ *   The handler object.
  */
-function og_arbitrary_access_get_og_arbitrary_access_handler($plugin_name) {
+function og_arbitrary_access_get_og_arbitrary_access_handler($plugin_name, $entity_type, $entity) {
   $cache = &drupal_static(__FUNCTION__);
   if (isset($cache[$plugin_name])) {
     return $cache[$plugin_name];
@@ -140,9 +169,22 @@ function og_arbitrary_access_get_og_arbitrary_access_handler($plugin_name) {
   if (!$class = ctools_plugin_load_class('og_arbitrary_access', 'og_arbitrary_access', $plugin_name, 'class')) {
     throw new \Exception("OG access plugin class for '$plugin_name' not found.");
   }
-  $handler = new $class($plugin);
+  $handler = new $class($plugin, $entity_type, $entity);
   $cache[$plugin_name] = $handler;
 
   return $cache[$plugin_name];
 }
 
+
+/**
+ * Implements hook_node_grants().
+ */
+function og_arbitrary_access_node_grants($account, $op) {
+  $grants = array();
+  foreach (og_arbitrary_access_get_og_arbitrary_access_plugins() as $plugin_name => $plugin) {
+    $result = call_user_func(array($plugin['class'], 'getNodeGrants'));
+    $grants = array_merge_recursive($grants, $result);
+  }
+
+  return $grants;
+}

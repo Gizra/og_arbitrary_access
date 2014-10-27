@@ -15,7 +15,6 @@ function og_arbitrary_access_entity_info() {
     'entity class' => 'OgArbitraryAccess',
     'base table' => 'og_arbitrary_access',
     'fieldable' => TRUE,
-    'access callback' => 'og_arbitrary_access_access',
     'entity keys' => array(
       'id' => 'id',
       'label' => FALSE,

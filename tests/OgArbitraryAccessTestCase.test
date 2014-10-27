@@ -53,7 +53,7 @@ class OgArbitraryAccessTestCase extends DrupalWebTestCase {
 
     // Reference the OG arbitrary access entity.
     $wrapper = entity_metadata_wrapper('node', $this->group1);
-    $wrapper->og_arbitrary_access->set($entity);
+    $wrapper->og_arbitrary_access[] = $entity;
     $wrapper->save();
 
     // Create node to add to group.

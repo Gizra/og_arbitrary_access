@@ -1,0 +1,100 @@
+<?php
+
+/**
+ * @file
+ * Control the group and group content view access of groups by custom logic.
+ */
+
+
+/**
+ * Implements hook_ctools_plugin_directory().
+ */
+function og_arbitrary_access_ctools_plugin_directory($module, $plugin) {
+  if ($module == 'og_arbitrary_access') {
+    return 'plugins/' . $plugin;
+  }
+}
+
+/**
+ * Implements hook_ctools_plugin_type().
+ */
+function og_arbitrary_access_ctools_plugin_type() {
+  $plugins['og_arbitrary_access'] = array(
+    'classes' => array('class'),
+    'process' => 'og_arbitrary_access_plugin_process',
+  );
+  return $plugins;
+}
+
+
+/**
+ * Add defaults values to the normalizer related plugins.
+ */
+function og_arbitrary_access_plugin_process(&$plugin, $info) {
+  // Common operations.
+  $plugin += array(
+    'description' => '',
+  );
+
+  // Call the plugin specific process functions.
+  $function = 'og_arbitrary_access_process_' . $info['type'];
+  if (function_exists($function)) {
+    $function($plugin, $info);
+  }
+}
+
+/**
+ * Include CTools plugins and get all normalizer plugins.
+ *
+ * @return array
+ *   All normalizing plugins.
+ */
+function og_arbitrary_access_get_og_arbitrary_access_plugins() {
+  ctools_include('plugins');
+  return ctools_get_plugins('og_arbitrary_access', 'og_arbitrary_access');
+}
+
+/**
+ * Include CTools plugins and get the specified electricity normalizer plugin.
+ *
+ * @param string $plugin_name
+ *   If provided this function only returns the selected plugin.
+ *
+ * @return array
+ *   The selected plugin for electricity normalizer.
+ */
+function og_arbitrary_access_get_og_arbitrary_access_plugin($plugin_name) {
+  ctools_include('plugins');
+  return ctools_get_plugins('og_arbitrary_access', 'og_arbitrary_access', $plugin_name);
+}
+
+/**
+ * Return the handler based on major and minor version, and resource name.
+ *
+ * @param $plugin_name
+ *  Name of plugin.
+ * @throws Exception
+ *  Class not found.
+ *
+ * @return ElectricityNormalizerInterface | NULL
+ *   The handler object if found, or NULL.
+ */
+function og_arbitrary_access_get_og_arbitrary_access_handler($plugin_name) {
+  $cache = &drupal_static(__FUNCTION__);
+  if (isset($cache[$plugin_name])) {
+    return $cache[$plugin_name];
+  }
+
+  $cache[$plugin_name] = NULL;
+
+  ctools_include('plugins');
+  $plugin = ctools_get_plugins('og_arbitrary_access', 'og_arbitrary_access', $plugin_name);
+  if (!$class = ctools_plugin_load_class('og_arbitrary_access', 'og_arbitrary_access', $plugin_name, 'class')) {
+    throw new \Exception("OG access plugin class for '$plugin_name' not found.");
+  }
+  $handler = new $class($plugin);
+  $cache[$plugin_name] = $handler;
+
+  return $cache[$plugin_name];
+}
+

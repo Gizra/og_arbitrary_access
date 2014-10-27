@@ -1,0 +1,9 @@
+name = Organic groups arbitrary access
+description = "Control the group and group content view access of groups by custom logic."
+package = "Organic groups"
+dependencies[] = og
+core = 7.x
+
+; Handlers
+files[] = plugins/OgArbitraryAccessBase.php
+files[] = plugins/OgArbitraryAccessInterface.php

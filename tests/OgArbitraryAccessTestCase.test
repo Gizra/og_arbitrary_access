@@ -23,6 +23,7 @@ class OgArbitraryAccessTestCase extends DrupalWebTestCase {
    */
   function setUp() {
     parent::setUp('og', 'og_arbitrary_access');
+    node_access_rebuild();
 
     // Create "email domain" OG arbitrary access entity.
     $values = array(
@@ -52,8 +53,8 @@ class OgArbitraryAccessTestCase extends DrupalWebTestCase {
 
     // Reference the OG arbitrary access entity.
     $wrapper = entity_metadata_wrapper('node', $this->group1);
-    // $wrapper->og_arbitrary_access->set($entity);
-    // $wrapper->save();
+    $wrapper->og_arbitrary_access->set($entity);
+    $wrapper->save();
 
     // Create node to add to group.
     $settings = array('type' => $group_content_type);

@@ -12,7 +12,7 @@ interface OgArbitraryAccessInterface {
    *
    * @see hook_node_grants()
    */
-  public static function getNodeGrants($plugin_name, $account = NULL, $op = 'view');
+  public static function getNodeGrants($account = NULL, $op = 'view');
 
   /**
    * @return mixed

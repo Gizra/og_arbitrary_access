@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \OgArbitraryAccessBase.
+ * Contains \PluggableNodeAccess.
  */
 
-abstract class OgArbitraryAccessBase implements OgArbitraryAccessInterface {
+abstract class PluggableNodeAccessBase implements PluggableNodeAccessInterface {
 
 
   /**
@@ -74,8 +74,8 @@ abstract class OgArbitraryAccessBase implements OgArbitraryAccessInterface {
         continue;
       }
 
-      if ($field['settings']['target_type'] != 'og_arbitrary_access') {
-        // Does not reference the OG arbitrary access entity.
+      if ($field['settings']['target_type'] != 'pluggable_node_access') {
+        // Does not reference the Pluggable node access entity.
         continue;
       }
 
@@ -100,7 +100,7 @@ abstract class OgArbitraryAccessBase implements OgArbitraryAccessInterface {
 
   protected function getAccessEntitiesFromGroup() {
     if (!$field_names = $this->getReferenceFields()) {
-      // No reference fields to OG arbitrary access entities.
+      // No reference fields to Pluggable node access entities.
       return array();
     }
 
@@ -116,6 +116,6 @@ abstract class OgArbitraryAccessBase implements OgArbitraryAccessInterface {
   }
 
   protected function getAccessEntitiesFromGroupContent() {
-    
+
   }
 }

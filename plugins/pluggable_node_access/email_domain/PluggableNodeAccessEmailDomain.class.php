@@ -47,7 +47,7 @@ class OgArbitraryAccessEmailDomain extends OgArbitraryAccessBase {
     }
 
     if (!$field_names = $this->getReferenceFields()) {
-      // No reference fields to OG arbitrary access entities.
+      // No reference fields to Pluggable node access entities.
       return array();
     }
 

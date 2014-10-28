@@ -5,11 +5,11 @@ dependencies[] = og
 core = 7.x
 
 ; Entity classes.
-files[] = includes/OgArbitraryAccess.php
+files[] = includes/PluggableNodeAccess.php
 
 ; Handlers
-files[] = plugins/OgArbitraryAccessBase.php
-files[] = plugins/OgArbitraryAccessInterface.php
+files[] = plugins/PluggableNodeAccessBase.php
+files[] = plugins/PluggableNodeAccessInterface.php
 
 ; Tests
-files[] = tests/OgArbitraryAccessTestCase.test
+files[] = tests/PluggableNodeAccessEmailDomainTestCase.test

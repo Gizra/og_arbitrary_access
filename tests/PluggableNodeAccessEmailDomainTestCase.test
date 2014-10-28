@@ -14,7 +14,7 @@ class OgArbitraryAccessTestCase extends DrupalWebTestCase {
     return array(
       'name' => 'Access',
       'description' => 'Test the access.',
-      'group' => 'OG arbitrary access',
+      'group' => 'Pluggable node access',
     );
   }
 
@@ -22,15 +22,15 @@ class OgArbitraryAccessTestCase extends DrupalWebTestCase {
    * Operations before the testing begins.
    */
   function setUp() {
-    parent::setUp('og', 'og_arbitrary_access');
+    parent::setUp('og', 'pluggable_node_access');
     node_access_rebuild();
 
-    // Create "email domain" OG arbitrary access entity.
+    // Create "email domain" Pluggable node access entity.
     $values = array(
       'type' => 'email_domain',
       'data' => array('foo.bar'),
     );
-    $entity = entity_create('og_arbitrary_access', $values);
+    $entity = entity_create('pluggable_node_access', $values);
     $entity->save();
 
     $group_type = $this->drupalCreateContentType();
@@ -38,22 +38,22 @@ class OgArbitraryAccessTestCase extends DrupalWebTestCase {
 
     // Add OG group field to a node's bundle.
     og_create_field(OG_GROUP_FIELD, 'node', $group_type);
-    og_create_field('og_arbitrary_access', 'node', $group_type);
+    og_create_field('pluggable_node_access', 'node', $group_type);
 
     $group_content_type = $this->drupalCreateContentType();
     $group_content_type = $group_content_type->type;
 
     // Add OG audience field to a node's bundle.
     og_create_field(OG_AUDIENCE_FIELD, 'node', $group_content_type);
-    og_create_field('og_arbitrary_access', 'node', $group_content_type);
+    og_create_field('pluggable_node_access', 'node', $group_content_type);
 
     // Create group node.
     $settings = array('type' => $group_type);
     $this->group1 = $this->drupalCreateNode($settings);
 
-    // Reference the OG arbitrary access entity.
+    // Reference the Pluggable node access entity.
     $wrapper = entity_metadata_wrapper('node', $this->group1);
-    $wrapper->og_arbitrary_access[] = $entity;
+    $wrapper->pluggable_node_access[] = $entity;
     $wrapper->save();
 
     // Create node to add to group.

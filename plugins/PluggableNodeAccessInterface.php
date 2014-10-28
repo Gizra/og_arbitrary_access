@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \OgArbitraryAccessInterface.
+ * Contains \PluggableNodeAccess.
  */
 
-interface OgArbitraryAccessInterface {
+interface PluggableNodeAccessInterface {
 
   /**
    * @return mixed

@@ -15,6 +15,7 @@ class OgArbitraryAccessTestCase extends DrupalWebTestCase {
       'name' => 'Access',
       'description' => 'Test the access.',
       'group' => 'Pluggable node access',
+      'dependencies' => array('og'),
     );
   }
 

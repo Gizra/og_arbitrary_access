@@ -2,14 +2,14 @@
 
 /**
  * @file
- * Contains \OgArbitraryAccess.
+ * Contains \PluggableNodeAccess.
  */
 
 
-class OgArbitraryAccess extends Entity {
+class PluggableNodeAccess extends Entity {
 
   public function __construct($values = array()) {
-    parent::__construct($values, 'og_arbitrary_access');
+    parent::__construct($values, 'pluggable_node_access');
     if (!isset($this->timestamp)) {
       $this->timestamp = time();
     }

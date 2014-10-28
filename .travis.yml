@@ -23,15 +23,16 @@ before_script:
 
   # create new site, stubbing sendmail path with true to prevent delivery errors and manually resolving drush path
   - mysql -e 'create database drupal'
-  - php -d sendmail_path=`which true` `pear config-get php_dir`/drush/drush.php --yes core-quick-drupal --profile=testing --no-server --db-url=mysql://root:@127.0.0.1/drupal --enable=simpletest og_arbitrary_access
+  - php -d sendmail_path=`which true` `pear config-get php_dir`/drush/drush.php --yes core-quick-drupal --profile=testing --no-server --db-url=mysql://root:@127.0.0.1/drupal --enable=simpletest pluggable_node_access
 
   # reference and enable module in build site
-  - ln -s $(readlink -e $(cd -)) og_arbitrary_access/drupal/sites/all/modules/og_arbitrary_access
-  - cd og_arbitrary_access/drupal
-  - drush --yes pm-enable og_arbitrary_access
+  - ln -s $(readlink -e $(cd -)) pluggable_node_access/drupal/sites/all/modules/pluggable_node_access
+  - cd pluggable_node_access/drupal
+  - drush --yes dl og
+  - drush --yes pm-enable pluggable_node_access og
 
   # start a web server on port 8080, run in the background; wait for initialization
   - drush runserver 127.0.0.1:8080 &
   - until netstat -an 2>/dev/null | grep '8080.*LISTEN'; do true; done
 
-script: drush test-run "OG arbitrary access" --uri=http://127.0.0.1:8080
+script: drush test-run "Pluggable node access" --uri=http://127.0.0.1:8080

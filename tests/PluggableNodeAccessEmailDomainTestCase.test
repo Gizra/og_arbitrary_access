@@ -94,14 +94,11 @@ class PluggableNodeAccessTestCase extends DrupalWebTestCase {
   function testAccess() {
     $user1 = $this->drupalCreateUser();
 
-    $this->drupalLogin($user1);
-    $this->drupalGet('node/' . $this->group1->nid);
-    $this->assertResponse(403);
+    $this->assertFalse(node_access('view', $this->group1, $user1));
 
     $user1->mail = 'new@foo.bar';
     user_save($user1);
 
-    $this->drupalGet('node/' . $this->group1->nid);
-    $this->assertResponse(200);
+    $this->assertTrue(node_access('view', $this->group1, $user1));
   }
 }

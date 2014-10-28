@@ -9,24 +9,24 @@
 /**
  * Implements hook_schema()
  */
-function og_arbitrary_access_schema() {
-  $schema['og_arbitrary_access'] = array(
-    'description' => 'An instance of a OG arbitrary access.',
+function pluggable_node_access_schema() {
+  $schema['pluggable_node_access'] = array(
+    'description' => 'An instance of a Pluggable node access.',
     'fields' => array(
       'id' => array(
         'type' => 'serial',
         'unsigned' => TRUE,
-        'description' => 'The Unique ID of the OG arbitrary access.',
+        'description' => 'The Unique ID of the Pluggable node access.',
       ),
       'type' => array(
-        'description' => 'Reference to an OG arbitrary access plugin.',
+        'description' => 'Reference to an Pluggable node access plugin.',
         'type' => 'varchar',
         'length' => 255,
         'not null' => TRUE,
         'default' => '',
       ),
       'timestamp' => array(
-        'description' => 'When the OG arbitrary access instance was recorded.',
+        'description' => 'When the Pluggable node access instance was recorded.',
         'type' => 'int',
         'not null' => TRUE,
         'unsigned' => TRUE,
@@ -47,8 +47,8 @@ function og_arbitrary_access_schema() {
 
   // Cache bins for Entity-cache module.
   $cache_schema = drupal_get_schema_unprocessed('system', 'cache');
-  $schema["cache_entity_og_arbitrary_access"] = $cache_schema;
-  $schema["cache_entity_og_arbitrary_access"]['description'] = "Cache table used to store OG arbitrary access entity records.";
+  $schema["cache_entity_pluggable_node_access"] = $cache_schema;
+  $schema["cache_entity_pluggable_node_access"]['description'] = "Cache table used to store Pluggable node access entity records.";
 
   return $schema;
 }

@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \OgArbitraryAccessEmailDomain.
+ * Contains \PluggableNodeAccessEmailDomain.
  */
 
-class OgArbitraryAccessEmailDomain extends OgArbitraryAccessBase {
+class PluggableNodeAccessEmailDomain extends PluggableNodeAccessBase {
 
   /**
    * {@inheritdoc}
@@ -47,7 +47,7 @@ class OgArbitraryAccessEmailDomain extends OgArbitraryAccessBase {
     }
 
     if (!$field_names = $this->getReferenceFields()) {
-      // No reference fields to OG arbitrary access entities.
+      // No reference fields to Pluggable node access entities.
       return array();
     }
 
@@ -71,7 +71,6 @@ class OgArbitraryAccessEmailDomain extends OgArbitraryAccessBase {
             'priority' => 0,
           );
         }
-
       }
     }
 

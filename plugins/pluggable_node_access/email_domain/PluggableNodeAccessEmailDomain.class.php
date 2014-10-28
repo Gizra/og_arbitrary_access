@@ -71,7 +71,6 @@ class PluggableNodeAccessEmailDomain extends PluggableNodeAccessBase {
             'priority' => 0,
           );
         }
-
       }
     }
 

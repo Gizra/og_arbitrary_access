@@ -91,20 +91,23 @@ abstract class PluggableNodeAccessBase implements PluggableNodeAccessInterface {
 
   protected function getAccessEntities() {
     $node = $this->getNode();
-    if (og_is_group('node', $node)) {
-      return getAccessEntitiesFromGroup();
-    }
 
-    return getAccessEntitiesFromGroupContent();
+    $entities = $this->getAccessEntitiesFromEntity('node', $node);
+    return array_merge_recursive($entities, $this->getAccessEntitiesFromGroupContent());
   }
 
-  protected function getAccessEntitiesFromGroup() {
+  protected function getAccessEntitiesFromEntity($entity_type = 'node', $entity = NULL) {
+
+    if (empty($entity)) {
+      $entity = $this->getNode();
+    }
+
     if (!$field_names = $this->getReferenceFields()) {
       // No reference fields to Pluggable node access entities.
       return array();
     }
 
-    $wrapper = entity_metadata_wrapper('node', $this->getNode());
+    $wrapper = entity_metadata_wrapper($entity_type, $entity);
     $result = array();
 
     foreach ($field_names as $field_name) {
@@ -116,6 +119,23 @@ abstract class PluggableNodeAccessBase implements PluggableNodeAccessInterface {
   }
 
   protected function getAccessEntitiesFromGroupContent() {
+    if (!module_exists('og')) {
+      return array();
+    }
 
+    if (!$groups = og_get_entity_groups('node', $this->getNode())) {
+      return array();
+    }
+
+    $result = array();
+    foreach ($groups as $entity_type => $ids) {
+      $entities = entity_load($entity_type, $ids);
+      foreach ($entities as $entity) {
+        $entities = $this->getAccessEntitiesFromEntity($entity_type, $entity);
+        $result = array_merge_recursive($result, $entities);
+      }
+    }
+
+    return $result;
   }
 }

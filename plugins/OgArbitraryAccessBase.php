@@ -88,4 +88,34 @@ abstract class OgArbitraryAccessBase implements OgArbitraryAccessInterface {
 
     return $return;
   }
+
+  protected function getAccessEntities() {
+    $node = $this->getNode();
+    if (og_is_group('node', $node)) {
+      return getAccessEntitiesFromGroup();
+    }
+
+    return getAccessEntitiesFromGroupContent();
+  }
+
+  protected function getAccessEntitiesFromGroup() {
+    if (!$field_names = $this->getReferenceFields()) {
+      // No reference fields to OG arbitrary access entities.
+      return array();
+    }
+
+    $wrapper = entity_metadata_wrapper('node', $this->getNode());
+    $result = array();
+
+    foreach ($field_names as $field_name) {
+      $entities = $wrapper->{$field_name}->value();
+      $entities = is_array($entities) ? $entities : array($entities);
+      $result = array_merge_recursive($result, $entities);
+    }
+    return $result;
+  }
+
+  protected function getAccessEntitiesFromGroupContent() {
+    
+  }
 }

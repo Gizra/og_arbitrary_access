@@ -12,7 +12,7 @@ function pluggable_node_access_entity_info() {
   $items['pluggable_node_access'] = array(
     'label' => t('Pluggable node access'),
     'controller class' => 'EntityAPIController',
-    'entity class' => 'OgArbitraryAccess',
+    'entity class' => 'PluggableNodeAccess',
     'base table' => 'pluggable_node_access',
     'fieldable' => TRUE,
     'entity keys' => array(
@@ -150,7 +150,7 @@ function pluggable_node_access_get_pluggable_node_access_plugin($plugin_name) {
  * @throws Exception
  *  Class not found.
  *
- * @return OgArbitraryAccessInterface
+ * @return PluggableNodeAccessInterface
  *   The handler object.
  */
 function pluggable_node_access_get_pluggable_node_access_handler($plugin_name, $node) {

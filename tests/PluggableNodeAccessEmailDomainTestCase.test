@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains OgArbitraryAccessTestCase.test.
+ * Contains PluggableNodeAccessTestCase.test.
  */
 
-class OgArbitraryAccessTestCase extends DrupalWebTestCase {
+class PluggableNodeAccessTestCase extends DrupalWebTestCase {
 
   /**
    * Provides information about the test class.

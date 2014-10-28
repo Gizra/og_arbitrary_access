@@ -2,10 +2,10 @@
 
 /**
  * @file
- * Contains \OgArbitraryAccessEmailDomain.
+ * Contains \PluggableNodeAccessEmailDomain.
  */
 
-class OgArbitraryAccessEmailDomain extends OgArbitraryAccessBase {
+class PluggableNodeAccessEmailDomain extends PluggableNodeAccessBase {
 
   /**
    * {@inheritdoc}

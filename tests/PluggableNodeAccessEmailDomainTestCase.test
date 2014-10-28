@@ -93,13 +93,21 @@ class PluggableNodeAccessTestCase extends DrupalWebTestCase {
    */
   function testAccess() {
     $user1 = $this->drupalCreateUser();
-
     $this->assertFalse(node_access('view', $this->group1, $user1));
 
     $user1->mail = 'new@foo.bar';
     user_save($user1);
-
     drupal_static_reset('node_access');
     $this->assertTrue(node_access('view', $this->group1, $user1));
+
+    // Test OG integration, by checking a group content.
+    $user2 = $this->drupalCreateUser();
+    $this->assertFalse(node_access('view', $this->groupContent1, $user2));
+
+    $user2->mail = 'new@foo.bar';
+    user_save($user2);
+    drupal_static_reset('node_access');
+    $this->assertTrue(node_access('view', $this->groupContent1, $user2));
+
   }
 }

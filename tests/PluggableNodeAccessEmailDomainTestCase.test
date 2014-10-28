@@ -99,6 +99,7 @@ class PluggableNodeAccessTestCase extends DrupalWebTestCase {
     $user1->mail = 'new@foo.bar';
     user_save($user1);
 
+    drupal_static_reset('node_access');
     $this->assertTrue(node_access('view', $this->group1, $user1));
   }
 }

@@ -60,6 +60,9 @@ class PluggableNodeAccessEmailDomain extends PluggableNodeAccessBase {
       $entities = is_array($entities) ? $entities : array($entities);
 
       foreach ($entities as $entity) {
+        if (!$entity) {
+          continue;
+        }
         foreach ($entity->data as $email_domain) {
           $realm = 'email_domain::' . $email_domain;
           $grants[] = array (

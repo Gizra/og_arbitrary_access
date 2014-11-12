@@ -112,6 +112,7 @@ abstract class PluggableNodeAccessBase implements PluggableNodeAccessInterface {
 
     foreach ($field_names as $field_name) {
       $entities = $wrapper->{$field_name}->value();
+      $entities = is_null($entities) ? array() : $entities;
       $entities = is_array($entities) ? $entities : array($entities);
       $result = array_merge_recursive($result, $entities);
     }

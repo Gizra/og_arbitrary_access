@@ -51,8 +51,6 @@ class PluggableNodeAccessEmailDomain extends PluggableNodeAccessBase {
       return array();
     }
 
-    $wrapper = entity_metadata_wrapper('node', $node);
-
     $grants = array();
 
     foreach ($this->getAccessEntities() as $entity) {

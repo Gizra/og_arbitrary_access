@@ -214,6 +214,7 @@ function pluggable_node_access_og_membership_update(OgMembership $og_membership)
 
 /**
  * Invalidate cache, and use updated membership for acquiring grants.
+ *
  * Granting access based on group membership should happen after the database
  * change of the og_membership entity, and in order to make it work the cache
  * should be invalidated.

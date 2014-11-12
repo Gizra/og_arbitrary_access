@@ -155,11 +155,12 @@ function pluggable_node_access_get_pluggable_node_access_plugin($plugin_name) {
  */
 function pluggable_node_access_get_pluggable_node_access_handler($plugin_name, $node) {
   $cache = &drupal_static(__FUNCTION__);
-  if (isset($cache[$plugin_name . ':' . $node->nid])) {
-    return $cache[$plugin_name . ':' . $node->nid];
+  if (isset($cache[$plugin_name])) {
+    $handler = $cache[$plugin_name];
+    $handler->setNode($node);
+    return $handler;
   }
-
-  $cache[$plugin_name . ':' . $node->nid] = NULL;
+  $cache[$plugin_name] = NULL;
 
   ctools_include('plugins');
   $plugin = ctools_get_plugins('pluggable_node_access', 'pluggable_node_access', $plugin_name);
@@ -167,9 +168,9 @@ function pluggable_node_access_get_pluggable_node_access_handler($plugin_name, $
     throw new \Exception("OG access plugin class for '$plugin_name' not found.");
   }
   $handler = new $class($plugin, $node);
-  $cache[$plugin_name . ':' . $node->nid] = $handler;
+  $cache[$plugin_name] = $handler;
 
-  return $cache[$plugin_name . ':' . $node->nid];
+  return $cache[$plugin_name];
 }
 
 /**

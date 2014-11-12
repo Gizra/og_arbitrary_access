@@ -156,9 +156,10 @@ function pluggable_node_access_get_pluggable_node_access_plugin($plugin_name) {
 function pluggable_node_access_get_pluggable_node_access_handler($plugin_name, $node) {
   $cache = &drupal_static(__FUNCTION__);
   if (isset($cache[$plugin_name])) {
-    return $cache[$plugin_name];
+    $handler = $cache[$plugin_name];
+    $handler->setNode($node);
+    return $handler;
   }
-
   $cache[$plugin_name] = NULL;
 
   ctools_include('plugins');
@@ -172,7 +173,6 @@ function pluggable_node_access_get_pluggable_node_access_handler($plugin_name, $
   return $cache[$plugin_name];
 }
 
-
 /**
  * Implements hook_node_grants().
  */
@@ -182,7 +182,6 @@ function pluggable_node_access_node_grants($account, $op) {
     $result = call_user_func(array($plugin['class'], 'getNodeGrants'), $account, $op);
     $grants = array_merge_recursive($grants, $result);
   }
-
   return $grants;
 }
 
@@ -196,6 +195,37 @@ function pluggable_node_access_node_access_records($node) {
     $result = $handler->getNodeAccessRecords();
     $grants = array_merge_recursive($grants, $result);
   }
-
   return $grants;
+}
+
+/**
+ * Implements hook_og_membership_insert().
+ */
+function pluggable_node_access_og_membership_insert(OgMembership $og_membership) {
+  pluggable_node_access_set_og_group_content_grants($og_membership);
+}
+
+/**
+ * Implements hook_og_membership_update().
+ */
+function pluggable_node_access_og_membership_update(OgMembership $og_membership) {
+  pluggable_node_access_set_og_group_content_grants($og_membership);
+}
+
+/**
+ * Invalidate cache, and use updated membership for acquiring grants.
+ * Granting access based on group membership should happen after the database
+ * change of the og_membership entity, and in order to make it work the cache
+ * should be invalidated.
+ *
+ * @param OgMembership $og_membership
+ *   The OG membership entity.
+ */
+function pluggable_node_access_set_og_group_content_grants(OgMembership $og_membership) {
+  if ($og_membership->entity_type != 'node') {
+    return;
+  }
+  og_invalidate_cache();
+  $node = node_load($og_membership->etid);
+  node_access_acquire_grants($node);
 }

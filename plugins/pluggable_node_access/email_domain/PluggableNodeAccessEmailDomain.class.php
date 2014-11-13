@@ -46,11 +46,6 @@ class PluggableNodeAccessEmailDomain extends PluggableNodeAccessBase {
       return array();
     }
 
-    if (!$field_names = $this->getReferenceFields()) {
-      // No reference fields to Pluggable node access entities.
-      return array();
-    }
-
     $grants = array();
 
     foreach ($this->getAccessEntities() as $entity) {

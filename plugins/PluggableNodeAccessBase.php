@@ -89,10 +89,12 @@ abstract class PluggableNodeAccessBase implements PluggableNodeAccessInterface {
     return $return;
   }
 
-  protected function getAccessEntities() {
-    $node = $this->getNode();
+  protected function getAccessEntities($entity_type = 'node', $entity = NULL) {
+    if (empty($entity)) {
+      $entity = $this->getNode();
+    }
 
-    $entities = $this->getAccessEntitiesFromEntity('node', $node);
+    $entities = $this->getAccessEntitiesFromEntity('node', $entity);
     return array_merge_recursive($entities, $this->getAccessEntitiesFromGroupContent());
   }
 
@@ -112,6 +114,7 @@ abstract class PluggableNodeAccessBase implements PluggableNodeAccessInterface {
 
     foreach ($field_names as $field_name) {
       $entities = $wrapper->{$field_name}->value();
+      $entities = is_null($entities) ? array() : $entities;
       $entities = is_array($entities) ? $entities : array($entities);
       $result = array_merge_recursive($result, $entities);
     }

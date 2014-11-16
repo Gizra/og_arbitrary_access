@@ -46,13 +46,6 @@ class PluggableNodeAccessEmailDomain extends PluggableNodeAccessBase {
       return array();
     }
 
-    if (!$field_names = $this->getReferenceFields()) {
-      // No reference fields to Pluggable node access entities.
-      return array();
-    }
-
-    $wrapper = entity_metadata_wrapper('node', $node);
-
     $grants = array();
 
     foreach ($this->getAccessEntities() as $entity) {
@@ -70,5 +63,19 @@ class PluggableNodeAccessEmailDomain extends PluggableNodeAccessBase {
     }
 
     return $grants;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function checkForNodeAccessChange() {
+    $node = $this->getNode();
+
+    $access_entities = $this->getAccessEntities();
+    $old_access_entities = $this->getAccessEntities('node', $node->original);
+    if (count($access_entities != count($old_access_entities))) {
+      return TRUE;
+    }
+    return FALSE;
   }
 }

@@ -1,5 +1,5 @@
-name = Organic groups arbitrary access
-description = "Control the group and group content view access of groups by custom logic."
+name = Pluggable node access
+description = "Control node access by pluggable logic."
 core = 7.x
 
 ; Entity classes.

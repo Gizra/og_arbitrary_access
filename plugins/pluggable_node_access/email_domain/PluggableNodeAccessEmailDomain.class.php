@@ -55,22 +55,17 @@ class PluggableNodeAccessEmailDomain extends PluggableNodeAccessBase {
 
     $grants = array();
 
-    foreach ($field_names as $field_name) {
-      $entities = $wrapper->{$field_name}->value();
-      $entities = is_array($entities) ? $entities : array($entities);
-
-      foreach ($entities as $entity) {
-        foreach ($entity->data as $email_domain) {
-          $realm = 'email_domain::' . $email_domain;
-          $grants[] = array (
-            'realm' => $realm,
-            'gid' => 1,
-            'grant_view' => 1,
-            'grant_update' => 0,
-            'grant_delete' => 0,
-            'priority' => 0,
-          );
-        }
+    foreach ($this->getAccessEntities() as $entity) {
+      foreach ($entity->data as $email_domain) {
+        $realm = 'email_domain::' . $email_domain;
+        $grants[] = array (
+          'realm' => $realm,
+          'gid' => 1,
+          'grant_view' => 1,
+          'grant_update' => 0,
+          'grant_delete' => 0,
+          'priority' => 0,
+        );
       }
     }
 

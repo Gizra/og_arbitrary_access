@@ -70,10 +70,15 @@ class PluggableNodeAccessEmailDomain extends PluggableNodeAccessBase {
    */
   public function checkForNodeAccessChange() {
     $node = $this->getNode();
-
-    $access_entities = $this->getAccessEntities();
-    $old_access_entities = $this->getAccessEntities('node', $node->original);
-    if (count($access_entities) != count($old_access_entities)) {
+    $access_entities_ids = array();
+    foreach ($this->getAccessEntities() as $access_entity) {
+      $access_entities_ids[] = $access_entity->id;
+    }
+    $old_access_entities_ids = array();
+    foreach ($this->getAccessEntities('node', $node->original) as $access_entity) {
+      $old_access_entities_ids[] = $access_entity->id;
+    }
+    if (array_diff($access_entities_ids, $old_access_entities_ids)) {
       return TRUE;
     }
     return FALSE;

@@ -73,7 +73,7 @@ class PluggableNodeAccessEmailDomain extends PluggableNodeAccessBase {
 
     $access_entities = $this->getAccessEntities();
     $old_access_entities = $this->getAccessEntities('node', $node->original);
-    if (count($access_entities != count($old_access_entities))) {
+    if (count($access_entities) != count($old_access_entities)) {
       return TRUE;
     }
     return FALSE;

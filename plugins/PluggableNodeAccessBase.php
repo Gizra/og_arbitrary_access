@@ -63,10 +63,10 @@ abstract class PluggableNodeAccessBase implements PluggableNodeAccessInterface {
   /**
    * @todo: Allow adding reference field on the group content.
    */
-  protected function getReferenceFields() {
+  protected function getReferenceFields($entity) {
     // Get the entity reference fields.
     $return = array();
-    $bundle = $this->getNode()->type;
+    $bundle = $entity->type;
     foreach (field_info_instances('node', $bundle) as $field_name => $instance) {
       $field = field_info_field($field_name);
       if ($field['type'] != 'entityreference') {
@@ -89,10 +89,12 @@ abstract class PluggableNodeAccessBase implements PluggableNodeAccessInterface {
     return $return;
   }
 
-  protected function getAccessEntities() {
-    $node = $this->getNode();
+  protected function getAccessEntities($entity_type = 'node', $entity = NULL) {
+    if (empty($entity)) {
+      $entity = $this->getNode();
+    }
 
-    $entities = $this->getAccessEntitiesFromEntity('node', $node);
+    $entities = $this->getAccessEntitiesFromEntity('node', $entity);
     return array_merge_recursive($entities, $this->getAccessEntitiesFromGroupContent());
   }
 
@@ -102,7 +104,7 @@ abstract class PluggableNodeAccessBase implements PluggableNodeAccessInterface {
       $entity = $this->getNode();
     }
 
-    if (!$field_names = $this->getReferenceFields()) {
+    if (!$field_names = $this->getReferenceFields($entity)) {
       // No reference fields to Pluggable node access entities.
       return array();
     }
@@ -112,6 +114,7 @@ abstract class PluggableNodeAccessBase implements PluggableNodeAccessInterface {
 
     foreach ($field_names as $field_name) {
       $entities = $wrapper->{$field_name}->value();
+      $entities = is_null($entities) ? array() : $entities;
       $entities = is_array($entities) ? $entities : array($entities);
       $result = array_merge_recursive($result, $entities);
     }

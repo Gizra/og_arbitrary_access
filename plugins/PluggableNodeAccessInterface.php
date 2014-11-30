@@ -35,4 +35,13 @@ interface PluggableNodeAccessInterface {
    * @return mixed
    */
   public static function access($entity_type, $entity, $op);
+
+  /**
+   * Determine if the changed node require node access change.
+   *
+   * @return boolean
+   *   TRUE in case the plugin made a change which requires node access change.
+   *   FALSE otherwise.
+   */
+  public function checkForNodeAccessChange();
 }

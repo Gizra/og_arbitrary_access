@@ -214,6 +214,7 @@ function pluggable_node_access_og_membership_update(OgMembership $og_membership)
 
 /**
  * Invalidate cache, and use updated membership for acquiring grants.
+ *
  * Granting access based on group membership should happen after the database
  * change of the og_membership entity, and in order to make it work the cache
  * should be invalidated.
@@ -228,4 +229,19 @@ function pluggable_node_access_set_og_group_content_grants(OgMembership $og_memb
   og_invalidate_cache();
   $node = node_load($og_membership->etid);
   node_access_acquire_grants($node);
+}
+
+/**
+ * Implements hook_og_access_invoke_node_access_acquire_grants_alter().
+ *
+ * Check privacy change made by pluggable_node_access.
+ */
+function pluggable_node_access_og_access_invoke_node_access_acquire_grants_alter(&$context) {
+  foreach (pluggable_node_access_get_pluggable_node_access_plugins() as $plugin_name => $plugin) {
+    $handler = pluggable_node_access_get_pluggable_node_access_handler($plugin_name, $context['entity']);
+    if ($handler->checkForNodeAccessChange()) {
+      $context['change_detected'] = TRUE;
+      break;
+    }
+  }
 }

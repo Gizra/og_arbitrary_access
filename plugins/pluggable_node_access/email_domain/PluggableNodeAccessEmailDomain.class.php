@@ -69,17 +69,10 @@ class PluggableNodeAccessEmailDomain extends PluggableNodeAccessBase {
    * {@inheritdoc}
    */
   public function checkForNodeAccessChange() {
-    $node = $this->getNode();
-    $access_entities_ids = array();
     foreach ($this->getAccessEntities() as $access_entity) {
-      $access_entities_ids[] = $access_entity->id;
-    }
-    $old_access_entities_ids = array();
-    foreach ($this->getAccessEntities('node', $node->original) as $access_entity) {
-      $old_access_entities_ids[] = $access_entity->id;
-    }
-    if (array_diff($access_entities_ids, $old_access_entities_ids)) {
-      return TRUE;
+      if ($access_entity->timestamp == REQUEST_TIME) {
+        return TRUE;
+      }
     }
     return FALSE;
   }

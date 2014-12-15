@@ -245,3 +245,24 @@ function pluggable_node_access_og_access_invoke_node_access_acquire_grants_alter
     }
   }
 }
+
+/**
+ * Implements hook_node_delete().
+ */
+function pluggable_node_access_node_delete($node) {
+  $wrapper = entity_metadata_wrapper('node', $node);
+  if (!isset($wrapper->pluggable_node_access)) {
+    // Node doesn't have restricted access.
+    return;
+  }
+  // Remove pluggable_node_access record when node is deleted.
+  $pluggable_node_access_entities = $wrapper->pluggable_node_access->value();
+  
+  $pluggable_node_access_entity_ids = array();
+
+  foreach ($pluggable_node_access_entities as $pluggable_node_access_entity) {
+    $pluggable_node_access_entity_ids[] = $pluggable_node_access_entity->id;
+  }
+  entity_delete_multiple('pluggable_node_access', $pluggable_node_access_entity_ids);
+}
+

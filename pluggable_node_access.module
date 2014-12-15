@@ -258,16 +258,15 @@ function pluggable_node_access_node_delete($node) {
   // Remove pluggable_node_access record when node is deleted.
   $pluggable_node_access_entities = $wrapper->pluggable_node_access->value();
 
-  $pluggable_node_access_entity_ids = array();
-
   if (!is_array($pluggable_node_access_entities)) {
+
     // There is only one pluggable_node_access record related to this node.
-    entity_delete('pluggable_node_access', $pluggable_node_access_entities->id);
+    $pluggable_node_access_entity_id = $pluggable_node_access_entities->id;
+    entity_delete('pluggable_node_access',  $pluggable_node_access_entity_id);
+
     return;
   }
-  foreach ($pluggable_node_access_entities as $pluggable_node_access_entity) {
-    $pluggable_node_access_entity_ids[] = $pluggable_node_access_entity->id;
-  }
-  entity_delete_multiple('pluggable_node_access', $pluggable_node_access_entity_ids);
+
+  entity_delete_multiple('pluggable_node_access', $wrapper->pluggable_node_access->value(array('identifier' => TRUE)));
 }
 

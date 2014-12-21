@@ -239,6 +239,9 @@ function pluggable_node_access_set_og_group_content_grants(OgMembership $og_memb
 function pluggable_node_access_og_access_invoke_node_access_acquire_grants_alter(&$context) {
   foreach (pluggable_node_access_get_pluggable_node_access_plugins() as $plugin_name => $plugin) {
     $handler = pluggable_node_access_get_pluggable_node_access_handler($plugin_name, $context['entity']);
+    // Check if entity access was changed.
+    // If we are removing restricted access - checkForNodeAccessChange() returns
+    // false, so we should check if the editing entity had restricted access.
     if ($handler->checkForNodeAccessChange() || $context['entity']->pluggable_node_access != $context['entity']->original->pluggable_node_access) {
       $context['change_detected'] = TRUE;
       break;

@@ -200,6 +200,8 @@ class PluggableNodeAccessTestDelete extends DrupalWebTestCase {
    */
   function testDelete() {
     $wrapper = entity_metadata_wrapper('node', $this->group1);
+
+    $ids = array();
     foreach(pluggable_node_access_get_pluggable_node_access_plugins() as $plugin_name => $plugin) {
       // Get fields names.
       $handler = pluggable_node_access_get_pluggable_node_access_handler($plugin_name, $this->group1);
@@ -210,18 +212,27 @@ class PluggableNodeAccessTestDelete extends DrupalWebTestCase {
           // Node doesn't have restricted access.
           continue;
         }
-        // Remove pluggable_node_access record when node is deleted.
+        // Save related pluggable_node_access entities ids.
         $ids = $wrapper->{$field}->value(array('identifier' => TRUE));
       }
     }
 
+    $ids = is_array($ids) ? $ids : array($ids);
+    // Delete the group node.
     node_delete($this->group1->nid);
 
-    $type = "pluggable_node_access";
-    $entities = entity_load($type);
+    // Get all existing pluggable_node_access entities ids.
+    $entities = entity_load("pluggable_node_access");
+    $ids_new = array();
     foreach($entities as $entity) {
       $ids_new[] = $entity->identifier();
     }
-    
+
+    // Pluggable_node_access entities that were related to the deleted group
+    // should be deleted.
+    foreach($ids as $id) {
+      $this->assertFalse(in_array($id, $ids_new));
+    }
+
   }
 }

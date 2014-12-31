@@ -227,13 +227,12 @@ class PluggableNodeAccessTestChanging extends DrupalWebTestCase {
       'data' => array('foo.bar'),
     );
     $entity = entity_create('pluggable_node_access', $values);
-    $entity->save();
+    entity_save('pluggable_node_access', $entity);
 
     $edit = array(
-      'pluggable_node_access[und][0][target_id]' => '- Restricted access - ('. $entity->id . ')',
+      'pluggable_node_access[und][1][target_id]' => '- Restricted access - ('. $entity->id . ')',
     );
 
-    debug($edit);
     $this->drupalPost('node/' . $this->group1->nid . '/edit', $edit, 'Save');
     drupal_static_reset();
     debug($this->group1->pluggable_node_access);

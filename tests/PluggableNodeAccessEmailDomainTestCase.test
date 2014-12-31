@@ -211,7 +211,7 @@ class PluggableNodeAccessTestChanging extends DrupalWebTestCase {
   /**
    * Check group content access is changing.
    */
-  function testAccessChanges() {
+  function _testAccessChanges() {
     $node1 = node_load($this->groupContent1->nid);
 
     // Check access before changing.
@@ -234,6 +234,7 @@ class PluggableNodeAccessTestChanging extends DrupalWebTestCase {
     );
 
     $this->drupalPost('node/' . $this->group1->nid . '/edit', $edit, 'Save');
+
     drupal_static_reset();
     debug($this->group1->pluggable_node_access);
     $this->assertTrue(node_access('view', $node1, $this->user2));

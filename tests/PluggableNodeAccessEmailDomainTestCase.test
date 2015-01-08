@@ -175,6 +175,9 @@ class PluggableNodeAccessTestChanging extends DrupalWebTestCase {
       'field_name' => 'pluggable_node_access',
       'entity_type' => 'node',
       'bundle' => $group_type,
+      'widget' => array(
+        'type' => 'options_select',
+      ),
     );
     field_create_instance($instance);
 
@@ -230,7 +233,9 @@ class PluggableNodeAccessTestChanging extends DrupalWebTestCase {
     entity_save('pluggable_node_access', $entity);
 
     $edit = array(
-      'pluggable_node_access[und][1][target_id]' => '- Restricted access - ('. $entity->id . ')',
+      'pluggable_node_access[und][]' => array(
+        '2' => '2',
+      ),
     );
 
     $this->drupalPost('node/' . $this->group1->nid . '/edit', $edit, 'Save');

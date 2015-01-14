@@ -216,10 +216,14 @@ class PluggableNodeAccessTestChanging extends DrupalWebTestCase {
    */
   function _testAccessChanges() {
     $node1 = node_load($this->groupContent1->nid);
+    $group = node_load($this->group1->nid);
+
 
     // Check access before changing.
     $this->assertTrue(node_access('view', $node1, $this->user1));
     $this->assertFalse(node_access('view', $node1, $this->user2));
+    $this->assertTrue(node_access('view', $group, $this->user1));
+    $this->assertFalse(node_access('view', $group, $this->user2));
 
     // Change access to other restriction.
     $this->drupalLogin($this->user1);
@@ -233,15 +237,18 @@ class PluggableNodeAccessTestChanging extends DrupalWebTestCase {
     entity_save('pluggable_node_access', $entity);
 
     $edit = array(
-      'pluggable_node_access[und][]' => array(
-        '2' => '2',
-      ),
+      'pluggable_node_access[und][]' => array('2'),
     );
 
     $this->drupalPost('node/' . $this->group1->nid . '/edit', $edit, 'Save');
 
     drupal_static_reset();
-    debug($this->group1->pluggable_node_access);
+
+    $group = node_load($this->group1->nid);
+
+    debug($group->pluggable_node_access);
+
+    $this->assertTrue(node_access('view', $group, $this->user2));
     $this->assertTrue(node_access('view', $node1, $this->user2));
 
   }

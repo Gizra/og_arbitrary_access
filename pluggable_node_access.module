@@ -232,17 +232,16 @@ function pluggable_node_access_set_og_group_content_grants(OgMembership $og_memb
 }
 
 /**
- * Implements hook_og_access_invoke_node_access_acquire_grants_alter().
+ * Implements hook_og_access_invoke_node_access_acquire_grants().
  *
  * Check privacy change made by pluggable_node_access.
  */
-function pluggable_node_access_og_access_invoke_node_access_acquire_grants_alter(&$context) {
+function pluggable_node_access_og_access_invoke_node_access_acquire_grants($context) {
   foreach (pluggable_node_access_get_pluggable_node_access_plugins() as $plugin_name => $plugin) {
     $handler = pluggable_node_access_get_pluggable_node_access_handler($plugin_name, $context['entity']);
     // Check if entity access was changed.
     if ($handler->checkForNodeAccessChange()) {
-      $context['change_detected'] = TRUE;
-      break;
+     return TRUE;
     }
   }
 }

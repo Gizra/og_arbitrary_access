@@ -241,7 +241,7 @@ function pluggable_node_access_og_access_invoke_node_access_acquire_grants_alter
     $handler = pluggable_node_access_get_pluggable_node_access_handler($plugin_name, $context['entity']);
     // Check if entity access was changed.
     if ($handler->checkForNodeAccessChange()) {
-     $result[] = TRUE;
+     $result['pluggable_node_access'] = TRUE;
     }
   }
 }

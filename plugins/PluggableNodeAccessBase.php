@@ -89,6 +89,19 @@ abstract class PluggableNodeAccessBase implements PluggableNodeAccessInterface {
     return $return;
   }
 
+  /**
+   * Gets access entities that are related to the current entity.
+   *
+   * @param $entity_type
+   *  Entity type.
+   * @param $entity
+   *  (optional) Entity object.
+   * @param $pluggable_node_access_type
+   *  (optional) Pluggable node access type.
+   *
+   * @return array
+   *  Returns array of node access entities.
+   */
   protected function getAccessEntities($entity_type = 'node', $entity = NULL, $pluggable_node_access_type = NULL) {
     if (empty($entity)) {
       $entity = $this->getNode();
@@ -98,6 +111,20 @@ abstract class PluggableNodeAccessBase implements PluggableNodeAccessInterface {
     return array_merge_recursive($entities, $this->getAccessEntitiesFromGroupContent());
   }
 
+
+  /**
+   * Gets pluggable node access entities that are related to the current entity.
+   *
+   * @param $entity_type
+   *  Entity type.
+   * @param $entity
+   *  (optional) Entity object.
+   * @param $pluggable_node_access_type
+   *  (optional) Pluggable node access type.
+   *
+   * @return array
+   *  Returns array of pluggable node access entities.
+   */
   protected function getAccessEntitiesFromEntity($entity_type = 'node', $entity = NULL, $pluggable_node_access_type = NULL) {
 
     if (empty($entity)) {

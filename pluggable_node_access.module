@@ -245,3 +245,30 @@ function pluggable_node_access_og_access_invoke_node_access_acquire_grants_alter
     }
   }
 }
+
+/**
+ * Implements hook_node_delete().
+ *
+ * Remove pluggable_node_access entities when node is deleting.
+ */
+function pluggable_node_access_node_delete($node) {
+  $wrapper = entity_metadata_wrapper('node', $node);
+  foreach(pluggable_node_access_get_pluggable_node_access_plugins() as $plugin_name => $plugin) {
+    // Get fields names.
+    $handler = pluggable_node_access_get_pluggable_node_access_handler($plugin_name, $node);
+    $fields = $handler->getReferenceFields($node);
+
+    foreach($fields as $field) {
+      if (!$wrapper->{$field}->value()) {
+        // Node doesn't have restricted access.
+        continue;
+      }
+
+      // Remove pluggable_node_access record when node is deleted.
+      $ids = $wrapper->{$field}->value(array('identifier' => TRUE));
+      $ids = is_array($ids) ? $ids : array($ids);
+      entity_delete_multiple('pluggable_node_access', $ids);
+    }
+  }
+}
+

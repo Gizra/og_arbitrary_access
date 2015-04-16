@@ -63,7 +63,7 @@ abstract class PluggableNodeAccessBase implements PluggableNodeAccessInterface {
   /**
    * @todo: Allow adding reference field on the group content.
    */
-  protected function getReferenceFields($entity) {
+  public function getReferenceFields($entity) {
     // Get the entity reference fields.
     $return = array();
     $bundle = $entity->type;

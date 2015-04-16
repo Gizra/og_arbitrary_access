@@ -70,7 +70,17 @@ class PluggableNodeAccessEmailDomain extends PluggableNodeAccessBase {
    */
   public function checkForNodeAccessChange() {
     foreach ($this->getAccessEntities() as $access_entity) {
+      // Restricted access was changed to other kind of the restricted access.
       if ($access_entity->timestamp == REQUEST_TIME) {
+        return TRUE;
+      }
+    }
+    // Get editing node.
+    $node = $this->getNode();
+    $fields = $this->getReferenceFields($node);
+    foreach($fields as $field) {
+      // Removed or added number of restricted access entities.
+      if ($node->original->{$field} != $node->{$field}) {
         return TRUE;
       }
     }

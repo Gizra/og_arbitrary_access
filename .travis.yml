@@ -28,7 +28,7 @@ before_script:
   # reference and enable module in build site
   - ln -s $(readlink -e $(cd -)) pluggable_node_access/drupal/sites/all/modules/pluggable_node_access
   - cd pluggable_node_access/drupal
-  - drush --yes dl og
+  - drush --yes dl og-7.x-2.x-dev
   - drush --yes pm-enable pluggable_node_access og
 
   # start a web server on port 8080, run in the background; wait for initialization

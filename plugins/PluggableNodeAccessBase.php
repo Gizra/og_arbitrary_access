@@ -89,19 +89,51 @@ abstract class PluggableNodeAccessBase implements PluggableNodeAccessInterface {
     return $return;
   }
 
-  protected function getAccessEntities($entity_type = 'node', $entity = NULL) {
+  /**
+   * Gets access entities that are related to the current entity.
+   *
+   * @param $entity_type
+   *  Entity type.
+   * @param $entity
+   *  (optional) Entity object.
+   * @param $pluggable_node_access_type
+   *  (optional) Pluggable node access type.
+   *
+   * @return array
+   *  Returns array of node access entities.
+   */
+  protected function getAccessEntities($entity_type = 'node', $entity = NULL, $pluggable_node_access_type = NULL) {
     if (empty($entity)) {
       $entity = $this->getNode();
     }
 
-    $entities = $this->getAccessEntitiesFromEntity('node', $entity);
+    $entities = $this->getAccessEntitiesFromEntity('node', $entity, $pluggable_node_access_type);
     return array_merge_recursive($entities, $this->getAccessEntitiesFromGroupContent());
   }
 
-  protected function getAccessEntitiesFromEntity($entity_type = 'node', $entity = NULL) {
+
+  /**
+   * Gets pluggable node access entities that are related to the current entity.
+   *
+   * @param $entity_type
+   *  Entity type.
+   * @param $entity
+   *  (optional) Entity object.
+   * @param $pluggable_node_access_type
+   *  (optional) Pluggable node access type.
+   *
+   * @return array
+   *  Returns array of pluggable node access entities.
+   */
+  protected function getAccessEntitiesFromEntity($entity_type = 'node', $entity = NULL, $pluggable_node_access_type = NULL) {
 
     if (empty($entity)) {
       $entity = $this->getNode();
+    }
+
+    if (empty($pluggable_node_access_type)) {
+      // Set the default pluggable node access type to email_domain.
+      $pluggable_node_access_type = $this->plugin['name'];
     }
 
     if (!$field_names = $this->getReferenceFields($entity)) {
@@ -116,6 +148,13 @@ abstract class PluggableNodeAccessBase implements PluggableNodeAccessInterface {
       $entities = $wrapper->{$field_name}->value();
       $entities = is_null($entities) ? array() : $entities;
       $entities = is_array($entities) ? $entities : array($entities);
+
+      foreach ($entities as $key => $pluggable_entity) {
+        // Remove the ones that are not of the requested type.
+        if ($pluggable_entity->type != $pluggable_node_access_type) {
+          unset($entities[$key]);
+        }
+      }
       $result = array_merge_recursive($result, $entities);
     }
     return $result;

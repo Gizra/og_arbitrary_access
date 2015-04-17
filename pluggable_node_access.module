@@ -263,7 +263,6 @@ function pluggable_node_access_node_delete($node) {
         // Node doesn't have restricted access.
         continue;
       }
-
       // Remove pluggable_node_access record when node is deleted.
       $ids = $wrapper->{$field}->value(array('identifier' => TRUE));
       $ids = is_array($ids) ? $ids : array($ids);

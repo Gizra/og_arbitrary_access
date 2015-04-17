@@ -236,12 +236,12 @@ function pluggable_node_access_set_og_group_content_grants(OgMembership $og_memb
  *
  * Check privacy change made by pluggable_node_access.
  */
-function pluggable_node_access_og_access_invoke_node_access_acquire_grants_alter(&$context) {
+function pluggable_node_access_og_access_invoke_node_access_acquire_grants_alter(&$result, $context) {
   foreach (pluggable_node_access_get_pluggable_node_access_plugins() as $plugin_name => $plugin) {
     $handler = pluggable_node_access_get_pluggable_node_access_handler($plugin_name, $context['entity']);
+    // Check if entity access was changed.
     if ($handler->checkForNodeAccessChange()) {
-      $context['change_detected'] = TRUE;
-      break;
+     $result['pluggable_node_access'] = TRUE;
     }
   }
 }
@@ -263,7 +263,6 @@ function pluggable_node_access_node_delete($node) {
         // Node doesn't have restricted access.
         continue;
       }
-
       // Remove pluggable_node_access record when node is deleted.
       $ids = $wrapper->{$field}->value(array('identifier' => TRUE));
       $ids = is_array($ids) ? $ids : array($ids);

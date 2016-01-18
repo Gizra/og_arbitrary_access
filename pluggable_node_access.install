@@ -15,6 +15,7 @@ function pluggable_node_access_schema() {
     'fields' => array(
       'id' => array(
         'type' => 'serial',
+        'not null' => TRUE,
         'unsigned' => TRUE,
         'description' => 'The Unique ID of the Pluggable node access.',
       ),
